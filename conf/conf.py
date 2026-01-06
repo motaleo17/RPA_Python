@@ -3,6 +3,7 @@ atalho = "Teste_Leonardo.exe"
 
 #JANELAS
 janelaPrincipal = "TESTE LEONARDO"
+janelaBotaoUm = "Teste_Leonardo.exe"
 
 numeroum = "C:\\Lighthouse\\Testes\\Python\\img\\um.png"
 numerodois = "C:\\Lighthouse\\Testes\\Python\\img\\dois.png"
