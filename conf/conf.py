@@ -1,3 +1,9 @@
+#Atalho
+atalho = "Teste_Leonardo.exe"
+
+#JANELAS
+janelaPrincipal = "TESTE LEONARDO"
+
 numeroum = "C:\\Lighthouse\\Testes\\Python\\img\\um.png"
 numerodois = "C:\\Lighthouse\\Testes\\Python\\img\\dois.png"
 numerotres = "C:\\Lighthouse\\Testes\\Python\\img\\tres.png"

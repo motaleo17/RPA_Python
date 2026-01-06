@@ -1,61 +1,45 @@
 import sys
 from pywinauto import Application
-from lib.calculator import Calculator
+from pywinauto.findwindows import ElementNotFoundError
+from conf import conf
 
-# =========================
-# VALIDAÇÃO DE PARÂMETROS
-# =========================
-if len(sys.argv) != 4:
-    print("Uso correto:")
-    print("python script.py <numero1> <operador> <numero2>")
-    sys.exit(1)
+estado = 0
+i = 0
 
-n1 = sys.argv[1]
-op = sys.argv[2]
-n2 = sys.argv[3]
+print("Iniciando Processamento")
 
-if not n1.isdigit() or not n2.isdigit():
-    print("Os números devem ser inteiros")
-    sys.exit(1)
+while i < 100:
+    if estado == 0:
+        print("Verificando se a aplicação já está aberta...")
+        try:
+            app = Application(backend="uia").connect(title_re=conf.janelaPrincipal)
+            print("Aplicação já aberta")
+            estado = 1
+        except ElementNotFoundError:
+            print("Aplicação não encontrada, abrindo...")
+            app = Application(backend="uia").start(conf.atalho)
+            estado = 1
 
-if op not in ["+", "-", "*", "/"]:
-    print("Operador inválido")
-    sys.exit(1)
+    elif estado == 1:
+        janela = app.window(title_re=conf.janelaPrincipal)
+        janela.wait("visible", timeout=20)
+        janela.set_focus()
 
-# =========================
-# ABRIR CALCULADORA
-# =========================
-print("Abrindo calculadora...")
+        if janela.is_active():
+            print("Janela ativa")
+            estado = 2
 
-app = Application(backend="uia").start("calc.exe")
+    elif estado == 2:
+        botao = janela.child_window(auto_id="3", control_type="Button")
 
-# 🔑 Conecta ao processo correto
-calc_window = app.window(title_re="Calculadora")
+        if botao.exists(timeout=5):
+            print("Botão existe, efetuando clique")
+            botao.click()
+        else:
+            print("Botão não existe")
 
-# Aguarda ficar pronta
-calc_window.wait("exists ready visible", timeout=15)
+        break
 
-print("Calculadora pronta")
-
-# =========================
-# OPERAÇÃO
-# =========================
-calc = Calculator(calc_window)
-
-calc.number(n1)
-
-if op == "+":
-    calc.add()
-elif op == "-":
-    calc.subtract()
-elif op == "*":
-    calc.multiply()
-elif op == "/":
-    calc.divide()
-
-calc.number(n2)
-calc.equals()
-
-print("Operação executada com sucesso")
+    i += 1
 
 sys.exit(0)
