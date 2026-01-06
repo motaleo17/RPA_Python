@@ -1,0 +1,1 @@
+image = "C:\\Lighthouse\\Testes\\Python\\img\\nove.png"
