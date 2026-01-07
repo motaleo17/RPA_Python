@@ -16,19 +16,19 @@ base_dir.mkdir(parents=True, exist_ok=True)
 file_path = base_dir / "Relatorio_Focus.pdf"
 
 with sync_playwright() as p:
-    chrome = ChromeManager(p)
 
     for _ in range(100):
         if estado == 0:
+            chrome = ChromeManager(p)
             page = chrome.abrir(URL)
             estado = 1
 
         elif estado == 1:
-            if chrome.validar():
-                home = HomePage(page)
+            if chrome.validar(URL):
                 estado = 2
 
         elif estado == 2:
+            home = HomePage(page)
             if home.abrir_pesquisa():
                 estado = 3
 
@@ -38,10 +38,10 @@ with sync_playwright() as p:
 
         elif estado == 4:
             if home.confirmar_pesquisa():
-                focus = FocusPage(page)
                 estado = 5
 
         elif estado == 5:
+            focus = FocusPage(page)
             if focus.abrir_resultado():
                 estado = 6
 
