@@ -1,0 +1,4 @@
+- Necessário ambos os python 64 e 32bits
+- Adicionar as bibliotecas para ambas as versoes
+- Chamada py -3.9-64 / py -3.9-32
+- Criar as .bat para inserir no path
