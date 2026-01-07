@@ -4,21 +4,31 @@ class HomePage:
 
     def abrir_pesquisa(self):
         botao = self.page.get_by_role("button", name="Buscar no site")
-        if botao.is_visible():
+        try:
+            botao.wait_for(state="visible", timeout=60000)
             botao.click()
             return True
-        return False
+        except Exception as e:
+            print(f"Botao da lupa nao foi encontrado: {e}")
+            return False
 
     def pesquisar(self, texto):
         campo = self.page.get_by_role("textbox", name="Buscar")
-        if campo.is_visible():
+        try:
+            campo.wait_for(state="visible", timeout=60000)
             campo.fill(texto)
             return True
-        return False
+        except Exception as e:
+            print(f"Campo de preencher a pesquisa nao foi identificado: {e}")
+            return False
 
     def confirmar_pesquisa(self):
         botao = self.page.get_by_role("button", name="Buscar", exact=True)
-        if botao.is_visible():
+        try:
+            botao.wait_for(state="visible", timeout=60000)
             botao.click()
             return True
-        return False
+        except Exception as e:
+            print(f"Campo de preencher a pesquisa nao foi identificado: {e}")
+            return False
+      

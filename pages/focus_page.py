@@ -4,14 +4,18 @@ class FocusPage:
 
     def abrir_resultado(self):
         link = self.page.get_by_role(
-            "link",
+            "link", 
             name="Focus - Relatório de Mercado"
         ).first
 
-        if link.is_visible():
+        try:
+            # Ele vai tentar esperar o elemento ficar visível por até 5 segundos (5000ms)
+            link.wait_for(state="visible", timeout=60000)
             link.click()
             return True
-        return False
+        except Exception as e:
+            print(f"O link não apareceu no tempo esperado: {e}")
+            return False
 
     def abrir_relatorio(self):
         link = self.page.get_by_role(
@@ -19,13 +23,21 @@ class FocusPage:
             name="Relatório de Mercado"
         ).first
 
-        if link.is_visible():
+        try:
+            link.wait_for(state="visible", timeout=60000)
             link.click()
             return True
-        return False
+        except Exception as e:
+            print(f"O relatorio nao apareceu no tempo esperado: {e}")
+            return False
 
     def obter_link_pdf(self):
         link = self.page.get_by_role("link", name="Baixar (pdf)")
-        if link.is_visible():
+
+        try:
+            link.wait_for(state="visible", timeout=60000)
+            print(f"link capturado: {link.get_attribute("href")}")
             return link.get_attribute("href")
-        return None
+        except Exception as e:
+            print(f"Nao foi possivel capturar o href: {e}")
+            return false
