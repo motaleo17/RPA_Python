@@ -3,7 +3,7 @@ from pywinauto import Application
 import pyautogui
 from pywinauto.findwindows import ElementNotFoundError
 from conf import conf, controles
-from lib import validaJanela
+from lib import validaJanela, bmlock
 from datetime import datetime
 
 pyautogui.PAUSE = 1 # Pausa entre comandos

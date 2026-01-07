@@ -1,3 +1,8 @@
+import time
+import os
+import sys
+from pathlib import Path
+
 #Atalho
 atalho = "Teste_Leonardo.exe"
 
