@@ -2,3 +2,4 @@
 - Adicionar as bibliotecas para ambas as versoes
 - Chamada py -3.9-64 / py -3.9-32
 - Criar as .bat para inserir no path
+- linha de comando -> py .\scriptWeb.py 07-01-2026 "https://www.bcb.gov.br/"
