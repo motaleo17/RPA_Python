@@ -3,8 +3,9 @@ from pywinauto import Application
 import pyautogui
 from pywinauto.findwindows import ElementNotFoundError
 from conf import conf, controles
-from lib import validaJanela
+from pages.validaJanela import ValidaJanela
 from datetime import datetime
+
 
 pyautogui.PAUSE = 1 # Pausa entre comandos
 pyautogui.FAILSAFE = True # Se mover o mouse para o canto da tela, o script para
@@ -15,6 +16,7 @@ estado = 0
 status = 100
 i = 0
 data = "08/01/2026"
+
 
 print("Iniciando Processamento")
 
@@ -31,13 +33,11 @@ while i < 100:
             app = Application(backend="win32").start(conf.atalho)
             estado = 1
     elif (estado == 1):
-        janela = validaJanela.ativar_janela(app,conf.janelaPrincipal)
-        if (janela):
-            print("Janela ativa")
-            
-            janela = validaJanela.ativar_janela(app,conf.janelaPrincipal)
-            #botao = janela.child_window(auto_id=controles.NumeroUm)
-            botao = janela.child_window(title=controles.NumeroUm, class_name="Button")
+        validaPrincipal = ValidaJanela(app, conf.janelaPrincipal)
+        janelaPrincipal = validaPrincipal.ativar_janela()
+        if (janelaPrincipal):
+            print(f"Janela ativa - {janelaPrincipal}")
+            botao = janelaPrincipal.child_window(title=controles.NumeroUm, class_name="Button")
             if botao.exists(timeout=5):
                 print("Botão existe, efetuando clique")
                 botao.click()
@@ -51,10 +51,11 @@ while i < 100:
             status = 10
             break
     elif (estado == 2):
-        janela = validaJanela.ativar_janela(app,conf.janelaBotaoUm)
-        if (janela):
+        validaBotaoUm = ValidaJanela(app, conf.janelaBotaoUm)
+        janelaBotaUm = validaBotaoUm.ativar_janela()
+        if (janelaBotaUm):
             print("Janela ativa")
-            botao = janela.child_window(title="OK", class_name="Button")
+            botao = janelaBotaUm.child_window(title="OK", class_name="Button")
             if botao.exists(timeout=5):
                 print("Botão existe, efetuando clique")
                 botao.click()
@@ -67,12 +68,11 @@ while i < 100:
             status = 10
             break
     elif (estado == 3):
-        janela = validaJanela.ativar_janela(app,conf.janelaPrincipal)
-        if (janela):
-            botao = janela.child_window(control_id=controles.data)
+        if (janelaPrincipal):
+            botao = janelaPrincipal.child_window(control_id=controles.data)
             if botao.exists(timeout=5):
                 print(f"Inserindo data: {data}")
-                campo_data = janela.child_window(control_id=controles.data)
+                campo_data = janelaPrincipal.child_window(control_id=controles.data)
                 campo_data.click_input(coords=(10, 15))
                 pyautogui.write(data, interval=0.1)
                 estado = 4
@@ -84,10 +84,9 @@ while i < 100:
             status = 10
             break     
     elif (estado == 4):
-        janela = validaJanela.ativar_janela(app,conf.janelaPrincipal)
-        if (janela):
+        if (janelaPrincipal):
             print("Janela ativa")
-            botao = janela.child_window(class_name=controles.TabProdutos)
+            botao = janelaPrincipal.child_window(class_name=controles.TabProdutos)
             if botao.exists(timeout=5):
                 print("Aba existe, ativando aba produtos")
                 botao.select("Produtos")
@@ -100,10 +99,9 @@ while i < 100:
             status = 10
             break
     elif (estado == 5):
-        janela = validaJanela.ativar_janela(app,conf.janelaPrincipal)
-        if (janela):
+        if (janelaPrincipal):
             print("Janela ativa")
-            botao = janela.child_window(control_id=controles.CheckBox1)
+            botao = janelaPrincipal.child_window(control_id=controles.CheckBox1)
             if botao.exists(timeout=5):
                 print("Check Box 1 existe, validando se esta marcado")
                 if botao.is_checked():

@@ -6,60 +6,49 @@ import pyautogui
 from PIL import Image
 import pyscreenshot as ImageGrab
 from datetime import datetime
-sys.stdout.flush()
 
-def preprocess_image(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (5, 5), 0)
-    thresh = cv2.adaptiveThreshold(
-        blur, 255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        11, 2
-    )
-    return thresh
-    
-def BMLocate(template_path, threshold=0.75):
-    screen = pyautogui.screenshot()
-    screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
-    template = cv2.imread(template_path)
-    screen_p = preprocess_image(screen)
-    template_p = preprocess_image(template)
-    result = cv2.matchTemplate(screen_p, template_p, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-    if max_val >= threshold:
-        h, w = template_p.shape
-        center_x = max_loc[0] + w // 2
-        center_y = max_loc[1] + h // 2
-        return (center_x, center_y)
-    return None
-    
-def BMClick(template_path, timeout=10):
-    start = time.time()
-    while time.time() - start < timeout:
-        pos = BMLocate(template_path)
-        if pos:
-            pyautogui.click(pos)
-            return True
-        time.sleep(0.5)
-    return False
+class BMLock:
 
+    def __init__(self, pause=0.5):
+        self.pause = pause
+        pyautogui.PAUSE = pause
+        pyautogui.FAILSAFE = True
+        sys.stdout.flush()
 
-def BMScreenshot():
-    print("__SCREENSHOT__", flush = True)
-    time.sleep(3)
+    # -------------------------
+    # Image helpers
+    # -------------------------
 
-def BMSetVar(key,value):
-    print("__SET__" + key + "=" + str(value), flush = True)
+    def _preprocess_image(self, img):
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        blur = cv2.GaussianBlur(gray, (5, 5), 0)
+        thresh = cv2.adaptiveThreshold(
+            blur, 255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY,
+            11, 2
+        )
+        return thresh
 
-def BMLogMessage(msg):
-    print(msg, flush = True)
-    
-def BMLocalshot():
-    now = datetime.now()
-    current_date = now.strftime("%Y%m%d%H%M%S")
-    imagePath = "C:/Lighthouse/Screenshots/"+current_date+" .jpg"
-    screenshot = ImageGrab.grab()
-    screenshot.save(imagePath,"jpeg")
-    print("__LOCALSHOT__"+imagePath, flush = True)
-    time.sleep(5)
+    # -------------------------
+    # Public API (mantém nomes)
+    # -------------------------
+
+    def BMLocate(self, template_path, threshold=0.75):
+        screen = pyautogui.screenshot()
+        screen = cv2.cvtColor(np.array(screen), cv2.COLOR_RGB2BGR)
+
+        template = cv2.imread(template_path)
+        if template is None:
+            return None
+
+        screen_p = self._preprocess_image(screen)
+        template_p = self._preprocess_image(template)
+
+        result = cv2.matchTemplate(
+            screen_p,
+            template_p,
+            cv2.TM_CCOEFF_NORMED
+        )
+
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)

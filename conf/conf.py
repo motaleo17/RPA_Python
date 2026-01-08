@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 #Atalho
-atalho = "Teste_Leonardo.exe"
+atalho = r"C:\Projetos\Python\RPA_Python\Teste_Leonardo.exe"
 
 #JANELAS
 janelaPrincipal = "TESTE LEONARDO"
