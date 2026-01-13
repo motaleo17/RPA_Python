@@ -5,7 +5,7 @@ from pywinauto.findwindows import ElementNotFoundError
 from conf import conf, controles
 from pages.validaJanela import ValidaJanela
 from datetime import datetime
-
+from lib.bmlock import BMLock
 
 pyautogui.PAUSE = 1 # Pausa entre comandos
 pyautogui.FAILSAFE = True # Se mover o mouse para o canto da tela, o script para
@@ -16,7 +16,6 @@ estado = 0
 status = 100
 i = 0
 data = "08/01/2026"
-
 
 print("Iniciando Processamento")
 
@@ -41,6 +40,7 @@ while i < 100:
             if botao.exists(timeout=5):
                 print("Botão existe, efetuando clique")
                 botao.click()
+                BMLock.BMScreenshot()
                 estado = 2
             else:
                 print("Botão não existe")
@@ -75,6 +75,7 @@ while i < 100:
                 campo_data = janelaPrincipal.child_window(control_id=controles.data)
                 campo_data.click_input(coords=(10, 15))
                 pyautogui.write(data, interval=0.1)
+                BMLock.BMScreenshot()
                 estado = 4
             else:
                 print("Botão não existe")
@@ -90,6 +91,7 @@ while i < 100:
             if botao.exists(timeout=5):
                 print("Aba existe, ativando aba produtos")
                 botao.select("Produtos")
+                BMLock.BMScreenshot()
                 estado = 5
             else:
                 print("Aba Produtos não existe")
@@ -110,6 +112,7 @@ while i < 100:
                     print("Check box esta desmarcado, click para marcar")
                     botao.click_input()
                 estado = 6
+                BMLock.BMScreenshot()
                 break
             else:
                 print("Botão Produtos não existe")

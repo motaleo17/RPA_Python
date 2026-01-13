@@ -1,9 +1,14 @@
+- criar .bats para chamada do py64 e py32 e inserir no C:/Windows
+    - py32.bat
+        @echo off
+        py -3.14-32 %*
+    - py64.bat
+        @echo off
+        py -3.14 %*
 - Necessário ambos os python 64 e 32bits
 - Adicionar as bibliotecas para ambas as versoes
-- Chamada py -3.9-64 / py -3.9-32
-- Criar as .bat para inserir no path
-- linha de comando -> py .\scriptWeb.py 07-01-2026 "https://www.bcb.gov.br/"
-
+- linha de comando -> py64 C:\Projetos\Python\RPA_Python\scriptWeb.py 07-01-2026 "https://www.bcb.gov.br/"
+- linha de cmoando -> py32 C:\Projetos\Python\RPA_Python\scriptWindows.py
 
 - STATUS DE ERROS PADROES 
 

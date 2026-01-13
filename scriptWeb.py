@@ -6,6 +6,7 @@ from browser.chrome import ChromeManager
 from pages.home_page import HomePage
 from pages.focus_page import FocusPage
 from services.download_service import DownloadService
+from lib.bmlock import BMLock
 
 estado = 0
 status = 100
@@ -43,6 +44,7 @@ with sync_playwright() as p:
 
         elif estado == 2:
             print("Click na Lupa para iniciar pesquisa")
+            #page.pause()
             home = HomePage(page)
             clicar_lupa = home.abrir_pesquisa()
             if clicar_lupa:
@@ -107,6 +109,7 @@ with sync_playwright() as p:
             print(f"Realizando Download")
             DownloadService.baixar_pdf(link, file_path)
             print("PDF salvo em:", file_path)
+            BMLock.BMScreenshot()
             status = 0
             break
 
