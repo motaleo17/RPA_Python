@@ -7,11 +7,18 @@ from pages.home_page import HomePage
 from pages.focus_page import FocusPage
 from services.download_service import DownloadService
 from lib.bmlock import BMLock
+from pages.abrir_diretorio import AbrirPasta
 
 estado = 0
 status = 100
 data = sys.argv[1]
 URL = sys.argv[2]
+
+janela = data.replace("/", "-")
+
+print(janela)
+
+#time.sleep(1000)
 
 base_dir = Path(__file__).resolve().parent / "Relatorios" / data.replace("/", "-")
 base_dir.mkdir(parents=True, exist_ok=True)
@@ -101,7 +108,7 @@ with sync_playwright() as p:
             if link:
                 estado = 8
             else:
-                print(f"Erro ao obter link")
+                print("Erro ao obter link")
                 status = 31
                 break
 
@@ -109,8 +116,24 @@ with sync_playwright() as p:
             print(f"Realizando Download")
             DownloadService.baixar_pdf(link, file_path)
             print("PDF salvo em:", file_path)
-            BMLock.BMScreenshot()
             status = 0
+            estado = 9
+        
+        elif estado == 9:
+            print(f"Iniciando print no diretorio: {base_dir}")
+            abrir_pasta = AbrirPasta(base_dir,janela)
+            abrirpasta = abrir_pasta.abrir_diretorio()
+            if abrirpasta:
+                print("Capturando evidencia")
+                BMLock.BMScreenshot()
+                estado = 10
+            else:
+                print("Erro ao abrir pasta para captura do print")
+                break
+
+        elif estado == 10:
+            print("Fechando Janela do diretorio")
+            fecharJanela = abrir_pasta.fechar_diretorio()
             break
 
         time.sleep(1)

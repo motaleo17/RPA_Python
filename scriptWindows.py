@@ -19,6 +19,7 @@ data = "08/01/2026"
 
 print("Iniciando Processamento")
 
+
 while i < 100:
     print("estado - ", estado)
     if (estado == 0):
